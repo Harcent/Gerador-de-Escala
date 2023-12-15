@@ -1,7 +1,21 @@
 import pandas as pd
 
 class Escala:
+  """
+  A class representing a work schedule.
 
+  Attributes:
+  - vacancias (list): A list of available shifts.
+  - pessoas (list): A list of people available for scheduling.
+  - desejos (dict): A dictionary mapping each person to their shift preferences.
+  - escala (dict): A dictionary representing the final schedule.
+
+  Methods:
+  - gerarEscala(): Generates the work schedule based on the given preferences and available shifts.
+  - conflito(escala, novoPlantao, pessoa): Checks if adding a new shift to a person's schedule would cause a conflict.
+  - seguidos(escala, novoPlantao, pessoa): Checks if adding a new shift to a person's schedule would violate the consecutive shift rule.
+  - mostrarEscala(): Prints the final work schedule.
+  """
   def __init__(self, vacancias, pessoas, desejos):
     self.vacancias = vacancias
     self.pessoas = pessoas
@@ -9,6 +23,9 @@ class Escala:
     self.escala = {pessoa : {} for pessoa in pessoas}
 
   def gerarEscala(self):
+    """
+    Generates the work schedule based on the given preferences and available shifts.
+    """
     pessoas = self.pessoas
     while len(pessoas) > 0:
       desejos = self.desejos
@@ -34,11 +51,33 @@ class Escala:
           pessoas.remove(pessoa)
 
   def conflito(self, escala, novoPlantao, pessoa):
+    """
+    Checks if adding a new shift to a person's schedule would cause a conflict.
+
+    Parameters:
+    - escala (dict): The current schedule of the person.
+    - novoPlantao (str): The new shift to be added.
+    - pessoa (str): The person's name.
+
+    Returns:
+    - bool: True if there is a conflict, False otherwise.
+    """
     if len(escala) == 10:
       return True
     return self.seguidos(escala, novoPlantao, pessoa)
 
   def seguidos(self, escala, novoPlantao, pessoa):
+    """
+    Checks if adding a new shift to a person's schedule would violate the consecutive shift rule.
+
+    Parameters:
+    - escala (dict): The current schedule of the person.
+    - novoPlantao (str): The new shift to be added.
+    - pessoa (str): The person's name.
+
+    Returns:
+    - bool: True if adding the new shift would violate the rule, False otherwise.
+    """
     novoDia, novoTurno = int(novoPlantao[:-1]), novoPlantao[-1]
     seguido = []
     for plantao in escala:
@@ -55,8 +94,11 @@ class Escala:
     if seguido:
       escala[seguido[0]] = 1
     return False
-    
+  
   def mostrarEscala(self):
+    """
+    Prints the final work schedule.
+    """
     print('Escala:')
     for pessoa in self.escala:
       print(f"{pessoa}: {self.escala[pessoa]}")
@@ -65,7 +107,7 @@ class Escala:
     
 prioridade = "Guilherme Vital Heltron Ribeiro Ramon Gleide Moisés Amanda_G Luiza Kariny Délio Amanda_A".split(" ")
 desejos = {}
-desejos[0] = "2D 9D 23D 30D 4D 11D 18D 4N 11N 18N 2N 9N 23N 30N 5D 26D 12N 19N 26N 8D 8N 15D 22D 29D 29N 20N 27N 7D 14D 28D 7N 14N 21N 28N 6D 6N 25D 25N 16D 16N" #Guilerme
+desejos[0] = "2D 9D 23D 30D 4D 11D 18D 4N 11N 18N 2N 9N 23N 30N 5D 26D 12N 19N 26N 8D 8N 15D 22D 29D 29N 20N 27N 7D 14D 28D 7N 14N 21N 28N 6D 6N 25D 25N 16D 16N" #Guilherme
 desejos[1] = "8N 9D 18N 22N 23N 24N 25N 29N 19D 19N 20D 20N 21N 22D 24D 25D 26D 28N 29D 9N 16N 26N 30N" #Vital
 desejos[2] = "10N 17N 24N 8N 9N 22N 29N 16N 23N 30N 11N 12N 18N 19N 25N 26N 13N 20N 27N 13D 20D 27D" #Heltron
 desejos[3] = "1N 2N 4N 7D 7N 8N 11N 12N 13N 14D 17N 18N 19N 20N 22N 24N 25N 26N 27N 28D" #Ribeiro
